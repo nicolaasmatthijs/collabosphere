@@ -1,0 +1,20 @@
+<div data-ng-controller="EngagementIndexController" class="dc-engagement-index" autoscroll="false">
+
+  <h1>Engagement Index</h1>
+
+  <!-- Landing Page -->
+  <div data-ng-if="!me.isAdmin && !currStudent.has_answered_share_question" data-ng-include="'app/components/engagementIndex/engagement_index_landing.html'"></div>
+
+  <div data-ng-if="currStudent.has_answered_share_question || me.isAdmin">
+
+    <!-- Not Share -->
+    <div data-ng-if="!me.isAdmin && !currStudent.share" data-ng-include="'app/components/engagementIndex/engagement_index_not_share.html'"></div>
+
+    <!-- Share or Instructor -->
+    <div data-ng-if="me.isAdmin || currStudent.share" data-ng-include="'app/components/engagementIndex/engagement_index_list.html'"></div>
+
+    <!-- Share option -->
+    <div data-ng-include="'app/components/engagementIndex/engagement_index_sharing_option.html'"></div>
+  </div>
+
+</div>

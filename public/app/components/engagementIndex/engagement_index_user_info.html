@@ -1,0 +1,14 @@
+<div class="clearfix dc-user-info">
+  <div class="dc-user-badge" data-ng-if="currStudent.share">
+    <div class="dc-user-badge-info">My Rank</div>
+    <span class="dc-user-badge-value" data-ng-bind="currStudentItem.rank"></span>
+  </div>
+  <div class="dc-user-badge">
+    <div class="dc-user-badge-info">My Points</div>
+    <span class="dc-user-badge-value" data-ng-bind="currStudentItem.points"></span>
+  </div>
+  <div class="dc-user-badge dc-user-badge-boxplot-container" data-ng-if="currStudent.share">
+    <div class="dc-user-badge-info">How do I compare</div>
+    <div id="dc-user-badge-boxplot" class="dc-user-badge-boxplot"></div>
+  </div>
+</div>
