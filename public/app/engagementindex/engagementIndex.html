@@ -3,7 +3,9 @@
   <h1>Engagement Index</h1>
 
   <!-- Landing Page -->
-  <div data-ng-if="!me.isAdmin && !currStudent.has_answered_share_question" data-ng-include="'app/components/engagementIndex/engagement_index_landing.html'"></div>
+  <div data-ng-if="!me.isAdmin && !currStudent.has_answered_share_question">
+    <div data-ng-include="'app/components/engagementIndex/engagement_index_landing.html'"></div>
+  </div>
 
   <div data-ng-if="currStudent.has_answered_share_question || me.isAdmin">
 

@@ -1,20 +1,60 @@
-#collabosphere-modal {
-  background-color: rgba(0, 0, 0, 0.75);
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 9999;
+/*!
+ * Copyright 2015 UC Berkeley (UCB) Licensed under the
+ * Educational Community License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ *     http://opensource.org/licenses/ECL-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+body {
+  background-color: inherit;
 }
 
-#collabosphere-modal-content {
-  background-color: #FFF;
-  bottom: 50px;
-  left: 50px;
-  overflow: auto;
+.modal-backdrop {
   position: fixed;
-  right: 50px;
-  top: 50px;
-  z-index: 9999;
+  bottom: 0;
+}
+
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-body {
+  padding-top: 0;
+}
+
+.modal-body h5:first-child {
+  margin-top: 0;
+}
+
+.collabosphere-radios {
+  padding: 0 15px 10px;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 0;
+}
+
+li.collabosphere-item-container {
+  padding: 10px 10px;
+}
+
+.collabosphere-item {
+  border: 1px solid #ccc;
+  width: 150px;
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+}
+
+.collabosphere-item input {
+  margin-top: 2px;
 }

@@ -1,53 +1,100 @@
 (function(){
 
-  // the minimum version of jQuery we want
-  var v = "2.0.0";
+  var MIN_DIMENSIONS = 150;
 
-  // check prior inclusion and version
-  if (window.jQuery === undefined || window.jQuery.fn.jquery < v) {
-    var done = false;
-    var script = document.createElement("script");
-    script.src = "//ajax.googleapis.com/ajax/libs/jquery/" + v + "/jquery.min.js";
-    script.onload = script.onreadystatechange = function(){
-      if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
-        done = true;
+  /**
+   * TODO
+   */
+  var setUpModal = function() {
+    $.ajax({
+      'url': 'http://localhost:2000/bookmarklet.html',
+      'success': function(response) {
+        $(document.body).append(response);
+        renderModal();
+      }
+    })
+  };
 
-        $('head').append( $('<link rel="stylesheet" type="text/css" />').attr('href', 'http://localhost:2000/bookmarklet.css') );
+  /**
+   * TODO
+   */
+  var renderModal = function() {
+    // TODO
+    $('#collabosphere-modal').modal();
+    // TODO
+    showPane('overview');
+  };
 
-        initCollabosphere();
+  /**
+   * TODO
+   */
+  var showPane = function(pane) {
+    // Hide the currenty active pane
+    $('.collabosphere-pane').addClass('hide');
+    // Show the requested pane
+    $('#collabosphere-' + pane).removeClass('hide');
+    // TODO
+    $('.modal-dialog').removeClass('modal-sm modal-lg');
+    if (pane === 'overview') {
+      $('.modal-dialog').addClass('modal-sm');
+    } else if (pane === 'items') {
+      $('.modal-dialog').addClass('modal-lg');
+    }
+  };
+
+  /**
+   * TODO
+   */
+  var handleOverviewNext = function() {
+    var selected = $('input[name=collabosphere-overview-options]:checked').val();
+    if (selected === 'bookmark') {
+
+    } else if (selected === 'items') {
+      renderPageItems();
+    }
+  };
+
+  /**
+   * TODO
+   */
+  var renderPageItems = function() {
+    // TODO
+    $('#collabosphere-items-list').empty();
+
+    // TODO
+    var images = [];
+
+    var imageCallback = function(img) {
+      if (images.indexOf(img) === -1) {
+        images.push(img);
+        // TODO
+        $('#collabosphere-items-list').append('<li class="collabosphere-item-container">' +
+                                                '<div class="collabosphere-item" style="background-image: url(\'' + img + '\')"></div>' +
+                                                '<input type="checkbox" />' +
+                                              '</li>');
       }
     };
-    document.getElementsByTagName("head")[0].appendChild(script);
-  } else {
-    initCollabosphere();
-  }
 
-  function initCollabosphere() {
-    (window.collabosphere.init = function() {
+    // TODO
+    collectImages(imageCallback);
 
-      if ($('#collabosphere-modal').length === 0) {
+    // TODO
+    showPane('items');
+  };
 
-        var modal = '<div id="collabosphere-modal">' +
-                      '<div id="collabosphere-modal-content"></div>' +
-                    '</div>';
-        var $modal = $(modal);
-        $('body').append($modal);
+  /**
+   * TODO
+   */
+  var addBinding = function() {
+    $(document).on('click', '#collabosphere-overview-next', handleOverviewNext);
+  };
 
-      }
+  addBinding();
+  setUpModal();
 
-      $('#collabosphere-modal').show();
+  /*    var addedImages = [];
 
-      var addedImages = [];
 
-      var $imgs = $('img');
-      $imgs.each(function(index, img) {
-        var $img = $(img);
-        var src = $img.attr('src');
-        if (addedImages.indexOf(src) === -1 && img.naturalHeight > 50 && img.naturalWidth > 50) {
-          addedImages.push(src);
-          $('#collabosphere-modal-content').append('<div style="display: inline; width: 150px; height: 150px;"><img src="' + src + '" style="height: 150px; width: 150px;"/></div>')
-        }
-      })
 
       $bgImgs = $('*').filter(function() {
         if (this.currentStyle)
@@ -65,14 +112,47 @@
             var width = this.naturalWidth;
             if (addedImages.indexOf(url) === -1 && height > 50 && width > 50) {
               addedImages.push(url);
-              $('#collabosphere-modal-content').append('<div style="display: inline; width: 150px; height: 150px;"><img src="' + url + '" style="height: 150px; width: 150px;"/></div>')
+              //$('#collabosphere-modal-content').append('<div style="display: inline; width: 150px; height: 150px;"><img src="' + url + '" style="height: 150px; width: 150px;"/></div>')
             }
         });
         $('body').append(bgImg);
         bgImg.attr('src', url);
       });
+  };*/
 
-    })();
-  }
+
+
+  /**
+   * TODO
+   */
+  var collectPageResources = function() {
+    var images = [];
+    // Collect the images in the page
+    images.concat(collectImages());
+    // Collect the background images in the page
+    images.concat(collectBackgroundImages());
+  };
+
+  /**
+   * TODO
+   */
+  var collectImages = function(callback) {
+    var $imgs = $('img', window.parent.document);
+    $imgs.each(function(index, img) {
+      console.log(index);
+      console.log(img)
+      var $img = $(img);
+      if (img.naturalHeight > MIN_DIMENSIONS && img.naturalWidth > MIN_DIMENSIONS) {
+        callback($img.attr('src'));
+      }
+    });
+  };
+
+  /**
+   * TODO
+   */
+  var collectBackgroundImages = function() {
+
+  };
 
 })();

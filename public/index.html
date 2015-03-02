@@ -4,12 +4,15 @@
   <!-- 3rd Party CSS -->
   <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="lib/fontawesome/css/font-awesome.css" />
+
+  <!-- Collabosphere CSS -->
+  <link rel="stylesheet" href="assets/css/main.css" />
 </head>
-<body>
-  <div data-ng-view></div>
+<body data-ng-view>
   <!-- 3rd Party JS -->
   <script src="lib/angular/angular.js"></script>
   <script src="lib/angular-route/angular-route.js"></script>
+  <script src="lib/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
 
   <!-- Collabosphere JS -->
   <script src="app/app.module.js"></script>
@@ -18,7 +21,9 @@
   <script src="app/shared/userFactory.js"></script>
   <script src="app/shared/userService.js"></script>
   <script src="app/shared/utilService.js"></script>
-  <script src="app/components/engagementIndex/engagementIndexFactory.js"></script>
-  <script src="app/components/engagementIndex/engagementIndexController.js"></script>
+  <script src="app/engagementindex/engagementIndexFactory.js"></script>
+  <script src="app/engagementindex/engagementIndexController.js"></script>
+  <script src="app/assetlibrary/assetlibrary_list/assetLibraryListFactory.js"></script>
+  <script src="app/assetlibrary/assetlibrary_list/assetLibraryListController.js"></script>
 
 </body>

@@ -1,0 +1,24 @@
+<!-- <div data-ng-controller="AssetLibraryListController"> -->
+  <!-- Asset Library search -->
+  <!-- <div data-ng-include="'app/assetlibrary/assetlibrary_search/assetlibrary_search.html'"></div> -->
+
+<div data-ng-controller="AssetLibraryListController">
+  <div class="input-group assetlibrary-list-search">
+    <input type="text" class="form-control assetlibrary-list-search-input" placeholder="Search for inspiration ...">
+    <button class="btn-link assetlibrary-list-search-advanced">Advanced <i class="fa fa-caret-down"></i></button>
+    <span class="input-group-btn">
+      <button class="btn btn-default assetlibrary-list-search-button" type="button"><i class="fa fa-search"></i>Search</button>
+    </span>
+  </div>
+
+  <div infinite-scroll='getAssetLibraryList()' infinite-scroll-disabled='isLoading' infinite-scroll-distance='1'>
+    <ul ng-repeat='asset in assets'>
+      <li class="list-inline">
+        <div>
+          {{asset.title}}
+        </div>
+      </li>
+    </ul>
+  </div>
+
+</div>

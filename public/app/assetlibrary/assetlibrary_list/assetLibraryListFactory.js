@@ -1,4 +1,4 @@
-/*!
+/**
  * Copyright 2015 UC Berkeley (UCB) Licensed under the
  * Educational Community License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may
@@ -17,12 +17,21 @@
 
   'use strict';
 
-  // Initialize the Collabosphere module
-  angular.module('collabosphere', [
-    //'ngAria',             // TODO
-    'ngRoute',
-    //'ngSanitize',         // TODO
-    'infinite-scroll'
-  ]);
+  angular.module('collabosphere').factory('assetLibraryListFactory', ['analyticsService', '$http', function(analyticsService, $http) {
 
-})(window.angular);
+    /**
+     * Get the list of assets in the Asset Library
+     *
+     * @return {Promise<Asset[]>}               $http promise returning the assets in the Asset Library
+     */
+    var getAssetLibraryList = function() {
+      return $http.get('/api/assetlibrary');
+    };
+
+    return {
+      getAssetLibraryList: getAssetLibraryList
+    };
+
+  }]);
+
+}(window.angular));
