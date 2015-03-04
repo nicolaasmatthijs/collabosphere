@@ -1,0 +1,19 @@
+<html>
+  <head>
+
+  </head>
+  <body>
+    <a href="javascript:
+              (function() {
+                var bookmarklet_token = '1234567890';
+                window.collabosphere = window.collabosphere || {'bookmarklet_token': bookmarklet_token};
+                if (window.collabosphere.init !== undefined) {
+                  window.collabosphere.init();
+                } else {
+                  var bookmarklet = document.createElement('script');
+                  bookmarklet.src = 'http://localhost:2000/assets/js/bookmarklet-init.js';
+                  document.body.appendChild(bookmarklet);
+                }
+              })();">Collabosphere</a>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<div data-ng-if="!me.isAdmin">
+  <div data-ng-include="'app/components/engagementIndex/engagement_index_user_info.html'"></div>
+</div>
+
+<div class="dc-engagement-index-controls dc-clearfix-container">
+  <form class="form-inline dc-float-left">
+    <input type="text" class="dc-engagement-search form-control" placeholder="Search..." data-ng-model="search.$" data-ng-change="handleSearch(search.$)">
+  </form>
+  <a type="button" href="/download/activities.csv" target="_blank" class="btn btn-info dc-float-right" data-ng-show="me.isAdmin" data-ng-click="trackCSVDownload()">Download CSV</a>
+</div>
+
+<table class="table table-striped table-bordered dc-table-striped-border dc-enagement-index-leaderboard">
+  <thead class="dc-header-color">
+    <tr class="dc-header-title">
+      <th data-ng-click="changeEngagementIndexSort('rank')" data-ng-class="{dropup: reverse}">Rank <span class="caret" data-ng-if="sortBy === 'rank'"></span></th>
+      <th data-ng-click="changeEngagementIndexSort('sortable_name')" data-ng-class="{dropup: reverse}">Student <span class="caret" data-ng-if="sortBy === 'sortable_name'"></span></th>
+      <th data-ng-click="changeEngagementIndexSort('share')" data-ng-class="{dropup: reverse}" data-ng-if="me.isAdmin">Share <span class="caret" data-ng-if="sortBy === 'share'"></span></th>
+      <th data-ng-click="changeEngagementIndexSort('points')" data-ng-class="{dropup: reverse}">Points <span class="caret" data-ng-if="sortBy === 'points'"></span></th>
+      <th data-ng-click="changeEngagementIndexSort('percentile')" data-ng-class="{dropup: reverse}" data-ng-if="me.isAdmin">Percentile <span class="caret" data-ng-if="sortBy === 'percentile'"></span></th>
+      <th data-ng-click="changeEngagementIndexSort('last_activity_date')" data-ng-class="{dropup: reverse}">Last Point Earned <span class="caret" data-ng-if="sortBy === 'last_activity_date'"></span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-ng-repeat="student in students | orderBy:sortBy:!reverse | filter:search:strict" data-ng-class="{'info': student.highlight}">
+      <td class="col-sm-1" data-ng-bind="student.rank"></td>
+      <td class="col-sm-3" data-ng-bind="student.name"></td>
+      <td data-ng-if="me.isAdmin" class="col-sm-2">
+        <span data-ng-if="student.share">Yes</span>
+        <span data-ng-if="!student.share">No</span>
+      </td>
+      <td class="col-sm-1" data-ng-bind="student.points"></td>
+      <td data-ng-if="me.isAdmin" class="col-sm-1" data-ng-bind-template="{{student.percentile}}%"></td>
+      <td class="col-sm-3"><span data-ng-if="student.last_activity_date > 0" data-ng-bind="student.last_activity_date | date:'MM/dd/yyyy h:mm a'"></span></td>
+    </tr>
+  </tbody>
+</table>
