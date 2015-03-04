@@ -43,7 +43,16 @@
     "run-sequence": "latest",
     "xml2js": "latest"
   },
-  "bundleDependencies": [],
+  "bundleDependencies": [
+    "col-assets",
+    "col-canvas",
+    "col-core",
+    "col-course",
+    "col-lti",
+    "col-rest",
+    "col-tests",
+    "col-users"
+  ],
   "engines": {
     "node": ">=0.10"
   }
