@@ -13,36 +13,15 @@
  * permissions and limitations under the License.
  */
 
-body {
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-weight: 300;
-  padding: 20px;
-}
+(function(angular) {
 
-.form-control:focus {
-  box-shadow: none;
-}
+  'use strict';
 
-.assetlibrary-list-search {
-  max-width: 650px;
-}
+  angular.module('collabosphere').config(['$compileProvider', function($compileProvider) {
 
-.assetlibrary-list-search-input {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|javascript):/);
 
-}
+  }]);
 
-.assetlibrary-list-search-advanced {
-  font-size: 12px;
-  position: absolute;
-  right: 90px;
-  top: 8px;
-  z-index: 10;
-}
+})(window.angular);
 
-.assetlibrary-list-search-button {
-  background-color: #F7F7F7;
-}
-
-.assetlibrary-list-search-button i {
-  margin-right: 5px;
-}

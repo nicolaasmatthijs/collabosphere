@@ -17,7 +17,7 @@
 
   'use strict';
 
-  angular.module('collabosphere').controller('AssetLibraryListController', ['analyticsService', 'assetLibraryListFactory', '$scope', function(analyticsService, assetLibraryListFactory, $scope) {
+  angular.module('collabosphere').controller('AssetLibraryListController', ['analyticsService', 'assetLibraryListFactory', 'userService', 'utilService', '$scope', function(analyticsService, assetLibraryListFactory, userService, utilService, $scope) {
 
     $scope.assets = [];
     $scope.page = 0;
@@ -35,6 +35,7 @@
      * TODO
      */
     var getAssetLibraryList = $scope.getAssetLibraryList = function() {
+      return;
       console.log('getAssetLibraryList');
       $scope.isLoading = true;
       assetLibraryListFactory.getAssetLibraryList().success(function(assets) {
@@ -44,7 +45,10 @@
       $scope.page++;
     };
 
-    loadAssetLibraryList();
+    userService.getMe().then(function(me) {
+      $scope.me = me;
+      // loadAssetLibraryList();
+    });
 
   }]);
 

@@ -2,6 +2,8 @@
 
   var MIN_DIMENSIONS = 150;
 
+  alert(JSON.stringify(window.parent.collabosphere));
+
   /**
    * TODO
    */
@@ -77,6 +79,8 @@
 
     // TODO
     collectImages(imageCallback);
+    // TODO
+    collectBackgroundImages(imageCallback);
 
     // TODO
     showPane('items');
@@ -120,27 +124,12 @@
       });
   };*/
 
-
-
-  /**
-   * TODO
-   */
-  var collectPageResources = function() {
-    var images = [];
-    // Collect the images in the page
-    images.concat(collectImages());
-    // Collect the background images in the page
-    images.concat(collectBackgroundImages());
-  };
-
   /**
    * TODO
    */
   var collectImages = function(callback) {
     var $imgs = $('img', window.parent.document);
     $imgs.each(function(index, img) {
-      console.log(index);
-      console.log(img)
       var $img = $(img);
       if (img.naturalHeight > MIN_DIMENSIONS && img.naturalWidth > MIN_DIMENSIONS) {
         callback($img.attr('src'));

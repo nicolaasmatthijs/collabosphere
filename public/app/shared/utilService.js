@@ -2,8 +2,17 @@
 
   'use strict';
 
-  var collabosphere = angular.module('collabosphere');
-  collabosphere.service('utilService', function($q) {
+  angular.module('collabosphere').service('utilService', function($location, $q) {
+
+    var apiDomain = $location.search().api_domain;
+    var courseId = $location.search().course_id;
+
+    /**
+     * TODO
+     */
+    var getApiUrl = function(url) {
+      return '/api/' + apiDomain + '/' + courseId + url;
+    };
 
     /**
      * Adjust the height of the current iFrame to the size of its content.
@@ -129,6 +138,7 @@
     };
 
     return {
+      getApiUrl: getApiUrl,
       getScrollPosition: getScrollPosition,
       resizeIFrame: resizeIFrame,
       scrollTo: scrollTo,
