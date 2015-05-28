@@ -44,12 +44,25 @@
     });
   };
 
+  $('*', window.parent.document).on('focus', function() {
+    var $iframe = $('#collabosphere-iframe', window.parent.document);
+    if ($iframe.is(':visible')) {
+      $iframe.focus();
+      $('#collabosphere-modal').focus();
+    }
+    console.log('Focus in parent');
+  });
+
+  $('*', $('#collabosphere-modal')).on('focus', function() {
+    console.log('Focus in iFrame');
+  });
+
   /**
    * Render the Bookmarklet modal and show the overview pane
    */
   var renderModal = function() {
     // Ensure that the iFrame in which the Bookmarklet is loaded is visible
-    $('#collabosphere-iframe', window.parent.document).css('display', 'block');
+    $('#collabosphere-iframe', window.parent.document).css('display', 'block').focus();
     // Load the modal dialog
     $('#collabosphere-modal').modal();
     showPane('overview');
@@ -466,7 +479,8 @@
   };
 
   /**
-   *
+   * Set the `data-value` attribute of a select element to the value of the selected
+   * option. This attribute will be used for CSS selectors
    */
   var setSelectStyle = function() {
     var $select = $(this);
