@@ -1,3 +1,16 @@
+# Copyright 2015 UC Berkeley (UCB) Licensed under the
+# Educational Community License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may
+# obtain a copy of the License at
+#
+#     http://opensource.org/licenses/ECL-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an "AS IS"
+# BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing
+# permissions and limitations under the License.
+
 require_relative '../spec/spec_helper'
 
 class CanvasPage
@@ -50,11 +63,14 @@ class CanvasPage
   button(:submit_button, :xpath => '//button[contains(.,"Submit")]')
   link(:logout_link, :text => 'Logout')
 
+  # Loads the Canvas homepage
   def load_homepage
     logger.info 'Loading Canvas homepage'
     navigate_to "#{WebDriverUtils.base_url}"
   end
 
+  # Accepts the Canvas messages that can intercept the user when logging into a course site
+  # @param course_id [String]                 - the Canvas course id in the course site URL path
   def accept_login_messages(course_id)
     wait_until(timeout=WebDriverUtils.page_load_wait) { current_url.include? "#{course_id}" }
     if updated_terms_heading?
@@ -71,38 +87,50 @@ class CanvasPage
     end
   end
 
+  # Loads the Canvas sub-account used to create test course sites
   def load_sub_account
     navigate_to "#{WebDriverUtils.base_url}/accounts/#{WebDriverUtils.sub_account}"
   end
 
+  # Loads the test course site homepage
+  # @param course_id [String]                   - the Canvas course id in the course site URL path
   def load_course_site(course_id)
     navigate_to "#{WebDriverUtils.base_url}/courses/#{course_id}"
   end
 
+  # Loads the test course site users page
+  # @param course_id [String]                   - the Canvas course id in the course site URL path
   def load_users_page(course_id)
     navigate_to "#{WebDriverUtils.base_url}/courses/#{course_id}/users"
   end
 
+  # Loads the test course site LTI tool configuration page
+  # @param course_id [String]                   - the Canvas course id in the course site URL path
   def load_tools_config_page(course_id)
     navigate_to "#{WebDriverUtils.base_url}/courses/#{course_id}/settings/configurations"
   end
 
+  # Logs out of Canvas
   def log_out
     WebDriverUtils.wait_for_element_and_click logout_link_element
   end
 
+  # Clicks the sidebar link to an existing asset library
+  # @return [String]                            - return the URL of the course site's asset library
   def click_asset_library_link
     WebDriverUtils.wait_for_element_and_click asset_library_link_element
     current_url
   end
 
   # Clicks the Engagement Index link in the Canvas sidebar
-  # TODO: @return [String]
+  # @return [String]                            - return the URL of the course site's engagement index
   def click_engagement_index_link
     WebDriverUtils.wait_for_element_and_click engagement_index_link_element
     current_url
   end
 
+  # Creates a test course site using a specified string as course title and ref code
+  # @param test_id [String]                     - the string used to identify a specific test run and its course site
   def create_course_site(test_id)
     logger.info "Creating a course site named #{test_id}"
     load_sub_account
@@ -114,6 +142,9 @@ class CanvasPage
     add_course_success_element.when_visible timeout=WebDriverUtils.page_load_wait
   end
 
+  # Publishes a test course site
+  # @param test_id [String]                     - the string used to identify a specific test run and its course site
+  # @return [String]                            - return the Canvas course id extracted from the course site URL
   def publish_course(test_id)
     logger.info 'Publishing the course'
     load_sub_account
@@ -125,6 +156,10 @@ class CanvasPage
     current_url.sub("#{WebDriverUtils.base_url}/courses/", '')
   end
 
+  # Adds to a course site all the test users in a hash where the user 'role' matches the user_role param
+  # @param course_id [String]                   - the Canvas course id in the course site URL path
+  # @param test_users [Hash]                    - the set of test users from which to draw
+  # @param user_role [String]                   - the type of users to add to the course site (e.g., 'Teacher', 'Student')
   def add_users(course_id, test_users, user_role)
     logger.info "Adding users with role #{user_role}"
     load_users_page course_id
@@ -144,6 +179,8 @@ class CanvasPage
     done_button
   end
 
+  # Loads the UI for adding a new LTI tool
+  # @param course_id [String]                   - the Canvas course id in the course site URL path
   def load_add_new_tool_config(course_id)
     load_tools_config_page course_id
     WebDriverUtils.wait_for_page_and_click apps_link_element
@@ -153,6 +190,8 @@ class CanvasPage
     url_input_element.when_visible timeout=WebDriverUtils.page_update_wait
   end
 
+  # Adds the asset library to a test course site
+  # @param course_id [String]                   - the Canvas course id in the course site URL path
   def add_asset_library(course_id)
     logger.info 'Adding asset library'
     load_add_new_tool_config course_id
@@ -164,6 +203,8 @@ class CanvasPage
     asset_library_app_element.when_visible timeout=WebDriverUtils.page_load_wait
   end
 
+  # Adds the engagement index to a test course site
+  # @param course_id [String]                   - the Canvas course id in the course site URL path
   def add_engagement_index(course_id)
     logger.info 'Adding engagement index'
     load_add_new_tool_config course_id
@@ -175,6 +216,10 @@ class CanvasPage
     engagement_index_app_element.when_visible timeout=WebDriverUtils.page_load_wait
   end
 
+  # Creates a test course site with the complete set of test users and Collabosphere tools
+  # @param test_id [String]                     - the string used to identify a specific test run and its course site
+  # @param test_users [Hash]                    - the set of test users from which to draw
+  # @return [String]                            - return the Canvas course id extracted from the course site URL
   def create_complete_test_course(test_id, test_users)
     create_course_site test_id
     course_id = publish_course test_id

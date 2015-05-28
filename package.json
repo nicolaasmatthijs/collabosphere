@@ -19,6 +19,7 @@
     "body-parser": "latest",
     "bunyan": "latest",
     "bunyan-prettystream": "latest",
+    "col-activities": "latest",
     "col-assets": "latest",
     "col-canvas": "latest",
     "col-categories": "latest",
@@ -32,6 +33,8 @@
     "cookie-parser": "latest",
     "cors": "latest",
     "express": "latest",
+    "fast-csv": "latest",
+    "forever": "latest",
     "ims-lti": "latest",
     "joi": "latest",
     "lodash": "latest",
@@ -40,7 +43,7 @@
     "pg-hstore": "latest",
     "randomstring": "latest",
     "restjsdoc": "latest",
-    "sequelize": "latest",
+    "sequelize": "2.0.6",
     "validator": "1.1.3"
   },
   "devDependencies": {
@@ -56,6 +59,7 @@
     "xml2js": "latest"
   },
   "bundleDependencies": [
+    "col-activities",
     "col-assets",
     "col-canvas",
     "col-categories",
