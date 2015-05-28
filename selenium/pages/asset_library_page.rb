@@ -36,6 +36,10 @@ class AssetLibraryPage
   elements(:gallery_asset_link, :link, :xpath => '//li[@data-ng-repeat="asset in assets"]//a')
   elements(:gallery_asset_title, :h3, :xpath => '//li[@data-ng-repeat="asset in assets"]//h3')
   elements(:gallery_asset_owner_name, :element, :xpath => '//li[@data-ng-repeat="asset in assets"]//small')
+  elements(:gallery_asset_like_button, :button, :xpath => '//button[@data-ng-click="like(asset)"]')
+  elements(:gallery_asset_likes_count, :span, :xpath => '//span[@data-ng-bind="asset.likes | number"]')
+
+  link(:back_to_library_link, :xpath => '//a[contains(text(),"Back to Inspiration Board")]')
 
   def load_page(driver, url)
     navigate_to url
@@ -44,7 +48,12 @@ class AssetLibraryPage
   end
 
   def wait_for_asset_in_gallery(driver, asset_title)
-    wait_until(timeout=WebDriverUtils.page_load_wait) { driver.find_element(:xpath, "//li//h3[text()='#{asset_title}']").displayed? }
+    wait_until(timeout=WebDriverUtils.page_load_wait) { driver.find_element(:xpath, "//h3[contains(text(),'#{asset_title}')]").displayed? }
+  end
+
+  def load_gallery_asset(driver, url, asset_title)
+    load_page(driver, url)
+    wait_for_asset_in_gallery(driver, asset_title)
   end
 
   def click_asset_link(index_position)
@@ -53,7 +62,7 @@ class AssetLibraryPage
   end
 
   def wait_for_asset_detail(driver, asset_title)
-    wait_until(timeout=WebDriverUtils.page_update_wait) { driver.find_element(:xpath, "//h2[text()='#{asset_title}']").displayed? }
+    wait_until(timeout=WebDriverUtils.page_update_wait) { driver.find_element(:xpath, "//h2[contains(text(),'#{asset_title}')]").displayed? }
   end
 
   # ADD SITE
@@ -105,6 +114,22 @@ class AssetLibraryPage
     wait_until(timeout=WebDriverUtils.page_update_wait) { delete_category_button_elements[index_position].exists? }
     WebDriverUtils.wait_for_element_and_click delete_category_button_elements[index_position]
     driver.switch_to.alert.accept
+  end
+
+  # LIKES
+
+  def enabled_like_buttons
+    buttons = []
+    gallery_asset_like_button_elements.each { |button| buttons << button if button.enabled? }
+    buttons
+  end
+
+  def toggle_gallery_item_like(index_position)
+    WebDriverUtils.wait_for_element_and_click gallery_asset_like_button_elements[index_position]
+  end
+
+  def click_back_to_gallery_link
+    WebDriverUtils.wait_for_element_and_click back_to_library_link_element
   end
 
 end

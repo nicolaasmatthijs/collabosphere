@@ -96,6 +96,13 @@ class CanvasPage
     current_url
   end
 
+  # Clicks the Engagement Index link in the Canvas sidebar
+  # TODO: @return [String]
+  def click_engagement_index_link
+    WebDriverUtils.wait_for_element_and_click engagement_index_link_element
+    current_url
+  end
+
   def create_course_site(test_id)
     logger.info "Creating a course site named #{test_id}"
     load_sub_account
