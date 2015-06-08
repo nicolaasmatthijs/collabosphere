@@ -65,7 +65,7 @@
       setTimeout(function() {
         // Render the box plot using highcharts
         // @see http://api.highcharts.com/highcharts
-        chart = new Highcharts.Chart({
+        var chart = new Highcharts.Chart({
           'chart': {
             'backgroundColor': 'transparent',
             'inverted': true,
