@@ -161,6 +161,15 @@
       return null;
     };
 
+    /**
+     * TODO
+     */
+    var setCanvasElementId = function(element) {
+      if (!element.get('uid')){
+        element.set('uid', Math.round(Math.random() * 1000000));
+      }
+    };
+
     initializeCanvas();
 
     /* CONCURRENT EDITING */
@@ -173,6 +182,9 @@
      * @param  {Object}         callback.element  The deserialized Fabric.js canvas element
      */
     var deserializeElement = function(element, callback) {
+      // TODO
+      element = angular.copy(element);
+
       // Extract the type from the serialized element
       var type = fabric.util.string.camelize(fabric.util.string.capitalize(element.type));
       if (element.type === 'image') {
@@ -206,10 +218,17 @@
 
       // Only notify the server if the element was added by the current user
       // and the element is not a drawing helper element
-      if (!element.get('uid') && !element.get('isHelper')) {
+      // TODO
+      if ((!element.get('uid') && !element.get('isHelper')) || element.get('isUndoRedo')) {
         // Add a unique id to the element
-        element.set('uid', Math.round(Math.random() * 10000));
+        setCanvasElementId(element);
         socket.emit('addElement', element.toObject());
+
+        // Add the action to the undo/redo queue
+        if (!element.get('isUndoRedo') && !element.get('isHelper')) {
+          addAction('add', element.toObject());
+          element.set('isUndoRedo', null);
+        }
       }
     });
 
@@ -235,6 +254,9 @@
       // and if the element is not a drawing helper element
       if (!element.get('isSocketUpdate') && !element.get('isHelper')) {
         socket.emit('updateElement', element.toObject());
+        // Add the action to the undo/redo queue
+        // TODO
+        // addAction('update', element.toObject(), element.originalState);
       }
       element.set('isSocketUpdate', null);
     });
@@ -274,7 +296,7 @@
         }
       // The text element did not exist before. Notify the server that the element was added
       } else if (!element.get('uid')) {
-        element.set('uid', Math.round(Math.random() * 10000));
+        setCanvasElementId(element);
         socket.emit('addElement', element.toObject());
       // The text element existed before. Notify the server that the element was updated
       } else {
@@ -293,6 +315,11 @@
       // Only notify the server if the element was deleted by the current user
       if (!element.get('isSocketUpdate')) {
         socket.emit('deleteElement', element.toObject());
+        // Add the action to the undo/redo queue
+        if (!element.get('isUndoRedo') && !element.get('isHelper')) {
+          addAction('delete', element.toObject());
+          element.set('isUndoRedo', null);
+        }
       }
       element.set('isSocketUpdate', null);
     });
@@ -454,6 +481,96 @@
         popupScope.isOpen = false;
         popup.remove();
       }
+    };
+
+    /* UNDO/REDO */
+
+    // Variable that will keep track of the actions the current user has taken
+    $scope.actionQueue = [];
+
+    // TODO
+    $scope.currentActionPosition = 0;
+
+    /**
+     * TODO
+     */
+    var addAction = function(type, element, originalState) {
+      // Remove all actions that happened after the action
+      // TODO
+      $scope.actionQueue.splice($scope.currentActionPosition, $scope.actionQueue.length - $scope.currentActionPosition);
+
+      // TODO
+      console.log(element.src);
+      $scope.actionQueue.push({
+        'type': type,
+        'element': element,
+        'originalState': originalState
+      });
+      // TODO
+      $scope.currentActionPosition++;
+    };
+
+    /**
+     * TODO
+     */
+    var undo = $scope.undo = function() {
+      $scope.currentActionPosition--;
+      var previousAction = $scope.actionQueue[$scope.currentActionPosition];
+      console.log(previousAction.element.src);
+
+      // The previous action was an element that was added.
+      // Undoing this should delete the element again
+      if (previousAction.type === 'add') {
+        var element = getCanvasElement(previousAction.element.uid);
+        element.set('isUndoRedo', true);
+        canvas.remove(element);
+
+      // The previous action was an element that was deleted.
+      // Undoing this should add the element again
+      } else if (previousAction.type === 'delete') {
+        deserializeElement(previousAction.element, function(element) {
+          element.set('isUndoRedo', true);
+          canvas.add(element);
+          element.moveTo(element.get('index'));
+          canvas.renderAll();
+        });
+
+      // TODO
+      } else if (previousAction.type === 'update') {
+
+      }
+    };
+
+    /**
+     * TODO
+     */
+    var redo = $scope.redo = function() {
+      var nextAction = $scope.actionQueue[$scope.currentActionPosition];
+      $scope.currentActionPosition++;
+      console.log(nextAction.element.src);
+
+      // The next action was an element that was added.
+      // Redoing this should add the element again
+      if (nextAction.type === 'add') {
+        deserializeElement(nextAction.element, function(element) {
+          element.set('isUndoRedo', true);
+          canvas.add(element);
+          element.moveTo(element.get('index'));
+          canvas.renderAll();
+        });
+
+      // The next action was an element that was deleted.
+      // Undoing this should delete the element again
+      } else if (nextAction.type === 'delete') {
+        var element = getCanvasElement(nextAction.element.uid);
+        element.set('isUndoRedo', true);
+        canvas.remove(element);
+
+      // TODO
+      } else if (nextAction.type === 'update') {
+
+      }
+
     };
 
     /* DRAWING */
@@ -659,11 +776,13 @@
       // When the modal dialog is closed, the selected assets will
       // be passed back and will be added to the whiteboard canvas
       modalInstance.result.then(function(selectedAssets) {
-        for (var i = 0; i < selectedAssets.length; i++) {
-          var asset = selectedAssets[i];
-          // TODO: Deal with assets that don't have thumbnail URL
-          if (asset.thumbnail_url) {
-            addAsset(asset.thumbnail_url);
+        if (selectedAssets) {
+          for (var i = 0; i < selectedAssets.length; i++) {
+            var asset = selectedAssets[i];
+            // TODO: Deal with assets that don't have thumbnail URL
+            if (asset.thumbnail_url) {
+              addAsset(asset.thumbnail_url);
+            }
           }
         }
       });
