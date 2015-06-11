@@ -226,10 +226,10 @@
 
         // Add the action to the undo/redo queue
         if (!element.get('isUndoRedo') && !element.get('isHelper')) {
-          addAction('add', element.toObject());
-          element.set('isUndoRedo', null);
+          addUndoAction('add', element.toObject());
         }
       }
+      element.set('isUndoRedo', null);
     });
 
     /**
@@ -249,15 +249,19 @@
      */
     canvas.on('object:modified', function(ev) {
       var element = ev.target;
+      console.log('object:modified');
+      console.log(element.get('isUndoRedo'));
 
       // Only notify the server if the element was updated by the current user
       // and if the element is not a drawing helper element
       if (!element.get('isSocketUpdate') && !element.get('isHelper')) {
         socket.emit('updateElement', element.toObject());
         // Add the action to the undo/redo queue
-        // TODO
-        // addAction('update', element.toObject(), element.originalState);
+        if (!element.get('isUndoRedo') && !element.get('isHelper')) {
+          addUndoAction('update', element.toObject(), element.originalState);
+        }
       }
+      element.set('isUndoRedo', null);
       element.set('isSocketUpdate', null);
     });
 
@@ -289,19 +293,35 @@
       // If the text element is empty, it can be removed from the whiteboard canvas
       var text = element.text.trim();
       if (!text) {
-        canvas.remove(text);
-        // Notify the server if the element was already stored
-        if (element.get('uid')) {
-          socket.emit('deleteElement', element.toObject());
+        // TODO
+        if (!element.get('uid')) {
+          element.set('isHelper', true);
         }
+        element.text = element.originalState.text;
+        canvas.remove(element);
+        // Notify the server if the element was already stored
+        //if (element.get('uid')) {
+        //  console.log('REMOVING ELEMENT');
+        //  console.log(element.toObject());
+        //  socket.emit('deleteElement', element.toObject());
+        //  // Add the action to the undo/redo queue
+        //  addUndoAction('delete', element.toObject());
+        //}
       // The text element did not exist before. Notify the server that the element was added
       } else if (!element.get('uid')) {
         setCanvasElementId(element);
         socket.emit('addElement', element.toObject());
+        // Add the action to the undo/redo queue
+        addUndoAction('add', element.toObject());
       // The text element existed before. Notify the server that the element was updated
       } else {
         socket.emit('updateElement', element.toObject());
+        // Add the action to the undo/redo queue
+        addUndoAction('update', element.toObject(), element.originalState);
       }
+
+      // TODO
+      element.set('isUndoRedo', null);
 
       // Switch back to move mode
       $scope.mode = 'move';
@@ -317,10 +337,10 @@
         socket.emit('deleteElement', element.toObject());
         // Add the action to the undo/redo queue
         if (!element.get('isUndoRedo') && !element.get('isHelper')) {
-          addAction('delete', element.toObject());
-          element.set('isUndoRedo', null);
+          addUndoAction('delete', element.toObject());
         }
       }
+      element.set('isUndoRedo', null);
       element.set('isSocketUpdate', null);
     });
 
@@ -494,17 +514,19 @@
     /**
      * TODO
      */
-    var addAction = function(type, element, originalState) {
+    var addUndoAction = function(type, element, originalState) {
       // Remove all actions that happened after the action
       // TODO
       $scope.actionQueue.splice($scope.currentActionPosition, $scope.actionQueue.length - $scope.currentActionPosition);
+      console.log('---------');
+      console.log($scope.actionQueue);
+      console.log($scope.currentActionPosition);
+      console.log('---------');
 
-      // TODO
-      console.log(element.src);
       $scope.actionQueue.push({
         'type': type,
-        'element': element,
-        'originalState': originalState
+        'element': angular.copy(element),
+        'originalState': angular.copy(originalState)
       });
       // TODO
       $scope.currentActionPosition++;
@@ -515,8 +537,7 @@
      */
     var undo = $scope.undo = function() {
       $scope.currentActionPosition--;
-      var previousAction = $scope.actionQueue[$scope.currentActionPosition];
-      console.log(previousAction.element.src);
+      var previousAction = angular.copy($scope.actionQueue[$scope.currentActionPosition]);
 
       // The previous action was an element that was added.
       // Undoing this should delete the element again
@@ -537,7 +558,16 @@
 
       // TODO
       } else if (previousAction.type === 'update') {
-
+        var element = getCanvasElement(previousAction.element.uid);
+        for (var property in previousAction.originalState) {
+          if (element[property] !== previousAction.originalState[property]) {
+            element.set(property, previousAction.originalState[property]);
+          }
+        }
+        element.set('isUndoRedo', true);
+        canvas.fire('object:modified', {'target': element});
+        canvas.absolutePan(currentCanvasPan);
+        canvas.renderAll();
       }
     };
 
@@ -545,9 +575,8 @@
      * TODO
      */
     var redo = $scope.redo = function() {
-      var nextAction = $scope.actionQueue[$scope.currentActionPosition];
+      var nextAction = angular.copy($scope.actionQueue[$scope.currentActionPosition]);
       $scope.currentActionPosition++;
-      console.log(nextAction.element.src);
 
       // The next action was an element that was added.
       // Redoing this should add the element again
@@ -568,9 +597,18 @@
 
       // TODO
       } else if (nextAction.type === 'update') {
-
+        var element = getCanvasElement(nextAction.element.uid);
+        for (var property in nextAction.originalState) {
+          if (element[property] !== nextAction.element[property]) {
+            element.set(property, nextAction.element[property]);
+          }
+        }
+        element.set('isUndoRedo', true);
+        canvas.fire('object:modified', {'target': element});
+        // TODO
+        canvas.absolutePan(currentCanvasPan);
+        canvas.renderAll();
       }
-
     };
 
     /* DRAWING */
