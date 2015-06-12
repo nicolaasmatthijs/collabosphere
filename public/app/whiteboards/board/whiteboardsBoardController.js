@@ -457,6 +457,9 @@
       canvas.deactivateAll().renderAll();
       lockObjects(false);
 
+      // TODO: Always close open popovers when using toolbar
+      // closePopovers();
+
       // If the selected mode is the same as the current mode, undo the selection
       // and switch back to move mode
       if ($scope.mode === newMode) {
@@ -477,8 +480,6 @@
       // Draw mode has been selected
       } else if (newMode === 'draw') {
         setDrawMode(true);
-        // TODO: Always close open popovers when using toolbar
-        closePopovers();
       // Text mode has been selected
       } else if (newMode === 'text') {
         addText();

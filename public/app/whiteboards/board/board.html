@@ -12,7 +12,7 @@
           <span class="sr-only">Move and transform</span>
         </i>
       </button>
-      <button type="button" class="btn btn-default" title="Draw" data-ng-click="setMode('draw')" data-ng-class="{'active': mode === 'draw'}">
+      <button type="button" class="btn btn-default" title="Draw" data-ng-click="setMode('draw')" data-ng-class="{'active': mode === 'draw'}" popover-template="'drawPopoverTemplate'" popover-append-to-body="true">
         <i class="fa fa-pencil">
           <span class="sr-only">Draw</span>
         </i>
@@ -76,6 +76,20 @@
       </button>
     </div>
   </div>
+
+  <!-- DRAW POPOVER -->
+  <script type="text/ng-template" id="drawPopoverTemplate">
+    <div class="form-group">
+      <label for="whiteboards-draw-size-new" class="col-sm-6 control-label">Size</label>
+      <div class="col-sm-6">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="whiteboards-draw-color-new" class="col-sm-6 control-label">Color</label>
+      <div class="col-sm-6">
+      </div>
+    </div>
+  </script>
 
   <!-- ADD ASSET POPOVER -->
   <script type="text/ng-template" id="addAssetPopoverTemplate">
