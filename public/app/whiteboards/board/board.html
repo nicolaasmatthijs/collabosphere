@@ -79,14 +79,51 @@
 
   <!-- DRAW POPOVER -->
   <script type="text/ng-template" id="drawPopoverTemplate">
-    <div class="form-group">
-      <label for="whiteboards-draw-size-new" class="col-sm-6 control-label">Size</label>
+    <div>
+      <label class="col-sm-6">Size</label>
       <div class="col-sm-6">
+        <select>
+          <option value="1px">1px</option>
+          <option value="5px">5px</option>
+          <option value="10px">10px</option>
+        </select>
       </div>
     </div>
     <div class="form-group">
-      <label for="whiteboards-draw-color-new" class="col-sm-6 control-label">Color</label>
+      <label class="col-sm-6">Color</label>
       <div class="col-sm-6">
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-black" value="rgb(0, 0, 0)" checked>
+          <span class="sr-only">Black</span>
+        </label>
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-dark-blue" value="rgb(90, 108, 122)">
+          <span class="sr-only">Dark Blue</span>
+        </label>
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-light-blue" value="rgb(2, 149, 222)">
+          <span class="sr-only">Light Blue</span>
+        </label>
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-green" value="rgb(10, 139, 0)">
+          <span class="sr-only">Green</span>
+        </label>
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-grey" value="rgb(230, 230, 230)">
+          <span class="sr-only">Grey</span>
+        </label>
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-purple" value="rgb(188, 58, 167)">
+          <span class="sr-only">Purple</span>
+        </label>
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-red" value="rgb(175, 56, 55)">
+          <span class="sr-only">Red</span>
+        </label>
+        <label>
+          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-yellow" value="rgb(189, 129, 0)">
+          <span class="sr-only">Yellow</span>
+        </label>
       </div>
     </div>
   </script>
