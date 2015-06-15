@@ -196,3 +196,23 @@
   position: relative;
   top: 1px;
 }
+
+/* COLOR PICKER */
+
+.whiteboards-color-container {
+  display: inline;
+}
+
+.whiteboards-color-picker label {
+  border: 2px solid #E3E3E3;
+  border-radius: 4px;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+}
+
+.whiteboards-color-picker label input {
+  left: -100px;
+  position: absolute;
+  top: -100px;
+}

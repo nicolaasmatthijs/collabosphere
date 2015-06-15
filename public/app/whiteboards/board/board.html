@@ -79,53 +79,28 @@
 
   <!-- DRAW POPOVER -->
   <script type="text/ng-template" id="drawPopoverTemplate">
-    <div>
+    <form>
       <label class="col-sm-6">Size</label>
       <div class="col-sm-6">
         <select>
-          <option value="1px">1px</option>
-          <option value="5px">5px</option>
-          <option value="10px">10px</option>
+          <option value="1">1px</option>
+          <option value="5">5px</option>
+          <option value="10">10px</option>
         </select>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group whiteboards-color-picker">
       <label class="col-sm-6">Color</label>
       <div class="col-sm-6">
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-black" value="rgb(0, 0, 0)" checked>
-          <span class="sr-only">Black</span>
-        </label>
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-dark-blue" value="rgb(90, 108, 122)">
-          <span class="sr-only">Dark Blue</span>
-        </label>
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-light-blue" value="rgb(2, 149, 222)">
-          <span class="sr-only">Light Blue</span>
-        </label>
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-green" value="rgb(10, 139, 0)">
-          <span class="sr-only">Green</span>
-        </label>
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-grey" value="rgb(230, 230, 230)">
-          <span class="sr-only">Grey</span>
-        </label>
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-purple" value="rgb(188, 58, 167)">
-          <span class="sr-only">Purple</span>
-        </label>
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-red" value="rgb(175, 56, 55)">
-          <span class="sr-only">Red</span>
-        </label>
-        <label>
-          <input type="radio" name="whiteboards-draw-color" id="whiteboards-draw-color-yellow" value="rgb(189, 129, 0)">
-          <span class="sr-only">Yellow</span>
-        </label>
+        <div class="whiteboards-color-container" data-ng-repeat="color in colors">
+          <label data-ng-style="{'background-color': color.color}">
+            <input type="radio" name="whiteboards-draw-color" data-ng-value="color.color" data-ng-model="selectedColor">
+            <i class="fa fa-check" data-ng-if="selectedColor === color.color"></i>
+            <span class="sr-only" data-ng-bind="color.name"></span>
+          </label>
+        </div>
       </div>
-    </div>
+    </form>
   </script>
 
   <!-- ADD ASSET POPOVER -->

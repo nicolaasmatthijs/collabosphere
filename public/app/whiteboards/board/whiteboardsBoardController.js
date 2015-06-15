@@ -38,6 +38,42 @@
       'query': 'api_domain=' + launchParams.apiDomain + '&course_id=' + launchParams.courseId + '&whiteboard_id=' + whiteboardId
     });
 
+    //
+    $scope.colors = [
+      {
+        'name': 'Black',
+        'color': 'rgb(0, 0, 0)'
+      },
+      {
+        'name': 'Dark Blue',
+        'color': 'rgb(90, 108, 122)'
+      },
+      {
+        'name': 'Light Blue',
+        'color': 'rgb(2, 149, 222)'
+      },
+      {
+        'name': 'Green',
+        'color': 'rgb(10, 139, 0)'
+      },
+      {
+        'name': 'Grey',
+        'color': 'rgb(230, 230, 230)'
+      },
+      {
+        'name': 'Purple',
+        'color': 'rgb(188, 58, 167)'
+      },
+      {
+        'name': 'Red',
+        'color': 'rgb(175, 56, 55)'
+      },
+      {
+        'name': 'Yellow',
+        'color': 'rgb(189, 129, 0)'
+      },
+    ]
+
     /* WHITEBOARD */
 
     /**
@@ -613,6 +649,9 @@
     };
 
     /* DRAWING */
+
+    // Variable that will keep track of the selected line width
+    $scope.lineWidth = 1;
 
     /**
      * Enable or disable drawing mode for the whiteboard canvas
