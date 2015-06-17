@@ -13,6 +13,7 @@
 
 require 'rspec'
 require 'logger'
+require 'csv'
 require 'selenium-webdriver'
 require 'page-object'
 require_relative '../util/web_driver_utils'
@@ -20,3 +21,5 @@ require_relative '../logging'
 require_relative '../pages/canvas_page'
 require_relative '../pages/cal_net_page'
 require_relative '../pages/asset_library_page'
+require_relative '../pages/engagement_index_page'
+require 'fileutils'
