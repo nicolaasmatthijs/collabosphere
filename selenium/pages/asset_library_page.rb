@@ -52,13 +52,14 @@ class AssetLibraryPage
   elements(:gallery_asset_like_button, :button, :xpath => '//button[@data-ng-click="like(asset)"]')
   elements(:gallery_asset_likes_count, :span, :xpath => '//span[@data-ng-bind="asset.likes | number"]')
 
-  link(:back_to_library_link, :xpath => '//a[contains(text(),"Back to Inspiration Board")]')
+  link(:back_to_library_link, :xpath => '//a[contains(text(),"Back to Asset Library")]')
 
   # Loads the asset library and puts browser focus in the iframe containing the tool
   # @param driver [Selenium::WebDriver]         - the active browser
   # @param url [String]                         - the asset library URL specific to the test course site
   def load_page(driver, url)
     navigate_to url
+    wait_until(timeout=WebDriverUtils.page_load_wait) { self.title == 'Asset Library' }
     wait_until(timeout=WebDriverUtils.page_load_wait) { driver.find_element(:id, 'tool_content') }
     driver.switch_to.frame driver.find_element(:id, 'tool_content')
   end
@@ -70,6 +71,10 @@ class AssetLibraryPage
     wait_until(timeout=WebDriverUtils.page_load_wait) { driver.find_element(:xpath, "//h3[contains(text(),'#{asset_title}')]").displayed? }
   end
 
+  # Combines the methods for loading the asset library and waiting for an asset with a specific title to appear
+  # @param driver [Selenium::WebDriver]         - the browser
+  # @param url [String]                         - the asset library URL specific to the test course site
+  # @param asset_title [String]                 - the title of the asset that should appear in the gallery
   def load_gallery_asset(driver, url, asset_title)
     load_page(driver, url)
     wait_for_asset_in_gallery(driver, asset_title)
@@ -156,16 +161,20 @@ class AssetLibraryPage
 
   # LIKES
 
+  # Returns all the click-able 'like' button elements on the current page
   def enabled_like_buttons
     buttons = []
     gallery_asset_like_button_elements.each { |button| buttons << button if button.enabled? }
     buttons
   end
 
+  # Toggles the state of a specified 'like' button element in a collection of elements, from like to not-like or vice versa
+  # @param index_position [Integer]             - the position of the button in the collection of buttons
   def toggle_gallery_item_like(index_position)
     WebDriverUtils.wait_for_element_and_click gallery_asset_like_button_elements[index_position]
   end
 
+  # Clicks the 'Back to Asset Library' link on the asset detail view
   def click_back_to_gallery_link
     WebDriverUtils.wait_for_element_and_click back_to_library_link_element
   end

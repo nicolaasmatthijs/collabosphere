@@ -1,3 +1,16 @@
+# Copyright 2015 UC Berkeley (UCB) Licensed under the
+# Educational Community License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may
+# obtain a copy of the License at
+#
+#     http://opensource.org/licenses/ECL-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an "AS IS"
+# BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing
+# permissions and limitations under the License.
+
 require_relative 'spec_helper'
 
 include Logging
@@ -17,7 +30,9 @@ describe 'Asset likes', :order => :defined do
     @cal_net.log_in(WebDriverUtils.admin_username, WebDriverUtils.admin_password)
     @course_id = @canvas.create_complete_test_course(test_id, test_users)
     @asset_library = AssetLibraryPage.new @driver
-    @asset_library_url = @canvas.click_asset_library_link
+    @asset_library_url = @canvas.click_asset_library_link @driver
+    @engagement_index = EngagementIndexPage.new @driver
+    @engagement_index_url = @canvas.click_engagement_index_link @driver
     @canvas.log_out
     @cal_net.logout_success_message_element.when_visible WebDriverUtils.page_load_wait
     @canvas.load_homepage
@@ -59,8 +74,6 @@ describe 'Asset likes', :order => :defined do
       @asset_library.wait_until { @asset_library.gallery_asset_likes_count_elements[0].text == '1' }
     end
     it 'earn Engagement Index "like" points for the liker' do
-      @engagement_index = EngagementIndexPage.new @driver
-      @engagement_index_url = @canvas.click_engagement_index_link
       @engagement_index.load_page(@driver, @engagement_index_url)
       @engagement_index.search_for_user test_liker
       expect(@engagement_index.users_table_element[1][3].text).to eql('1')
@@ -69,13 +82,13 @@ describe 'Asset likes', :order => :defined do
       @engagement_index.search_for_user test_uploader
       expect(@engagement_index.users_table_element[1][3].text).to eql('6')
     end
-    it 'show "like" points for the liker on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).to include("#{test_liker['fullName']}, like, 1, 1")
+    it 'add the liker\'s "like" activity to the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).to include("#{test_liker['fullName']}, like, 1")
     end
-    it 'show "get_like" points for the asset creator on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).to include("#{test_uploader['fullName']}, get_like, 1, 6")
+    it 'add the asset creator\'s "get_like" activity to the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).to include("#{test_uploader['fullName']}, get_like, 1")
     end
   end
 
@@ -94,13 +107,13 @@ describe 'Asset likes', :order => :defined do
       @engagement_index.search_for_user test_uploader
       expect(@engagement_index.users_table_element[1][3].text).to eql('5')
     end
-    it 'show fewer "like" points for the un-liker on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).not_to include("#{test_liker['fullName']}, like, 1, 1")
+    it 'remove the un-liker\'s "like" activity from the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).not_to include("#{test_liker['fullName']}, like, 1")
     end
-    it 'show fewer "get_like" points for the asset creator on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).not_to include("#{test_uploader['fullName']}, get_like, 1, 6")
+    it 'remove the asset creator\'s "get_like" activity from the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).not_to include("#{test_uploader['fullName']}, get_like, 1")
     end
   end
 
@@ -125,13 +138,13 @@ describe 'Asset likes', :order => :defined do
       @engagement_index.search_for_user test_uploader
       expect(@engagement_index.users_table_element[1][3].text).to eql('6')
     end
-    it 'show "like" points for the liker on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).to include("#{test_liker['fullName']}, like, 1, 1")
+    it 'add the liker\'s "like" activity to the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).to include("#{test_liker['fullName']}, like, 1")
     end
-    it 'show "get_like" points for the asset creator on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).to include("#{test_uploader['fullName']}, get_like, 1, 6")
+    it 'add the asset creator\'s "get_like" activity to the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).to include("#{test_uploader['fullName']}, get_like, 1")
     end
   end
 
@@ -156,13 +169,13 @@ describe 'Asset likes', :order => :defined do
       @engagement_index.search_for_user test_uploader
       expect(@engagement_index.users_table_element[1][3].text).to eql('5')
     end
-    it 'show fewer "like" points for the un-liker on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).not_to include("#{test_liker['fullName']}, like, 1, 1")
+    it 'remove the un-liker\'s "like" activity from the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).not_to include("#{test_liker['fullName']}, like, 1")
     end
-    it 'show fewer "get_like" points for the asset creator on the activities csv' do
-      @scores = @engagement_index.download_csv(@driver, @engagement_index_url)
-      expect(@scores).not_to include("#{test_uploader['fullName']}, get_like, 1, 6")
+    it 'remove the asset creator\'s "get_like" activity from the activities csv' do
+      scores = @engagement_index.download_csv(@driver, @engagement_index_url)
+      expect(scores).not_to include("#{test_uploader['fullName']}, get_like, 1")
     end
   end
 

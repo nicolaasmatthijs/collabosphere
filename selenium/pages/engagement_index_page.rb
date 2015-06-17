@@ -1,3 +1,16 @@
+# Copyright 2015 UC Berkeley (UCB) Licensed under the
+# Educational Community License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may
+# obtain a copy of the License at
+#
+#     http://opensource.org/licenses/ECL-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an "AS IS"
+# BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing
+# permissions and limitations under the License.
+
 require_relative '../spec/spec_helper'
 
 class EngagementIndexPage
@@ -9,7 +22,9 @@ class EngagementIndexPage
   link(:download_csv_link, :text => 'Download CSV')
   table(:users_table, :class => 'leaderboard-list-table')
 
-  # TODO: apply the same to asset library load-page method
+  # Loads the engagement index and puts browser focus in the iframe containing the tool
+  # @param driver [Selenium::WebDriver]         - the browser
+  # @param url [String]                         - the engagement index URL specific to the test course site
   def load_page(driver, url)
     navigate_to url
     wait_until(timeout=WebDriverUtils.page_load_wait) { self.title == 'Engagement Index' }
@@ -26,24 +41,24 @@ class EngagementIndexPage
     wait_until(timeout=WebDriverUtils.page_update_wait) { (users_table_element[1][1].text).include? name }
   end
 
-  # Downloads the csv, returns an array of , and then deletes the file
+  # Creates and/or cleans out the download dir, downloads the current CSV, and collects score information from its rows
   # @param driver [Selenium::WebDriver]
   # @param url [String]
   # @return [Array]
   def download_csv(driver, url)
-    WebDriverUtils.make_download_dir
+    WebDriverUtils.prepare_download_dir
+    csv_file_path = "#{WebDriverUtils.download_dir}/activities.csv"
+    csv = File.join(csv_file_path)
     load_page(driver, url)
     WebDriverUtils.wait_for_page_and_click download_csv_link_element
-    file = File.join("#{WebDriverUtils.download_dir}/activities.csv")
-    wait_until(timeout=WebDriverUtils.page_load_wait) { File.file? file }
+    wait_until(timeout=WebDriverUtils.page_load_wait) { File.file? csv }
     activities = []
-    CSV.foreach("#{WebDriverUtils.download_dir}/activities.csv") do |column|
-      # user_name, action, score, total
-      activities << "#{column[1]}, #{column[2]}, #{column[4]}, #{column[5]}"
+    # TODO: add the running total to the activity info being collected by the tests
+    CSV.foreach(csv_file_path, {:headers => true}) do |column|
+      # user_name, action, score
+      activities << "#{column[1]}, #{column[2]}, #{column[4]}"
     end
     activities
-  ensure
-    File.delete file
   end
 
 end

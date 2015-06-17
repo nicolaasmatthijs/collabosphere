@@ -24,10 +24,13 @@ class WebDriverUtils
     File.join(ENV['HOME'], @config['webdriver_download_dir'])
   end
 
-  def self.make_download_dir
-    FileUtils::mkdir_p File.join(ENV['HOME'], "#{WebDriverUtils.download_dir}")
+  # Creates the download dir if it does not exist and deletes any files remaining from previous tests
+  def self.prepare_download_dir
+    FileUtils::mkdir_p download_dir
+    FileUtils.rm_rf(download_dir, secure: true)
   end
 
+  # Instantiates the browser and (in the case of Firefox) modifies the default handling of CSV downloads
   def self.driver
     if @config['webdriver'] == 'firefox'
       profile = Selenium::WebDriver::Firefox::Profile.new
