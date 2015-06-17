@@ -38,7 +38,7 @@
       'query': 'api_domain=' + launchParams.apiDomain + '&course_id=' + launchParams.courseId + '&whiteboard_id=' + whiteboardId
     });
 
-    //
+    // TODO
     $scope.colors = [
       {
         'name': 'Black',
@@ -72,7 +72,19 @@
         'name': 'Yellow',
         'color': 'rgb(189, 129, 0)'
       },
-    ]
+    ];
+
+    // TODO
+    $scope.selectedColor = null;
+
+    setInterval(function() {
+      console.log('$scope.selectedColor is now ' + $scope.selectedColor);
+    }, 500);
+
+    // TODO
+    $scope.$watch('selectedColor', function() {
+      alert('$scope.selectedColor is now ' + $scope.selectedColor);
+    });
 
     /* WHITEBOARD */
 

@@ -12,7 +12,7 @@
           <span class="sr-only">Move and transform</span>
         </i>
       </button>
-      <button type="button" class="btn btn-default" title="Draw" data-ng-click="setMode('draw')" data-ng-class="{'active': mode === 'draw'}" popover-template="'drawPopoverTemplate'" popover-append-to-body="true">
+      <button type="button" class="btn btn-default" title="Draw" data-ng-click="setMode('draw')" data-ng-class="{'active': mode === 'draw'}" popover-template="'drawPopoverTemplate'">
         <i class="fa fa-pencil">
           <span class="sr-only">Draw</span>
         </i>
@@ -94,8 +94,8 @@
       <div class="col-sm-6">
         <div class="whiteboards-color-container" data-ng-repeat="color in colors">
           <label data-ng-style="{'background-color': color.color}">
-            <input type="radio" name="whiteboards-draw-color" data-ng-value="color.color" data-ng-model="selectedColor">
-            <i class="fa fa-check" data-ng-if="selectedColor === color.color"></i>
+            <input type="radio" name="whiteboards-draw-color" data-ng-value="color" data-ng-model="$parent.selectedColor">
+            <i class="fa fa-check" data-ng-if="$parent.selectedColor === color"></i>
             <span class="sr-only" data-ng-bind="color.name"></span>
           </label>
         </div>
