@@ -23,8 +23,9 @@
      * Like an asset. If the asset has been liked by the current user already, the like will be undone
      *
      * @param  {Asset}          asset                           The asset that should be liked or disliked
+     * @param  {Event}          $event                          The click event
      */
-    $scope.like = function(asset) {
+    $scope.like = function(asset, $event) {
       var liked = (asset.liked === true) ? null : true;
       assetLibraryItemFactory.like(asset.id, liked).success(function() {
         asset.liked = liked;
@@ -34,6 +35,7 @@
           asset.likes--;
         }
       });
+      $event.preventDefault();
     };
 
     userFactory.getMe().success(function(me) {
