@@ -12,7 +12,7 @@
           <span class="sr-only">Move and transform</span>
         </i>
       </button>
-      <button type="button" class="btn btn-default" title="Draw" data-ng-click="setMode('draw')" data-ng-class="{'active': mode === 'draw'}" popover-template="'drawPopoverTemplate'">
+      <button type="button" class="btn btn-default" title="Draw" data-ng-click="setMode('draw')" data-ng-class="{'active': mode === 'draw'}" data-title="" data-content-template="drawPopoverTemplate" data-placement="top" data-auto-close="1" bs-popover>
         <i class="fa fa-pencil">
           <span class="sr-only">Draw</span>
         </i>
@@ -26,11 +26,6 @@
       <button type="button" class="btn btn-default" title="Text" data-ng-click="setMode('text')" data-ng-class="{'active': mode === 'text'}">
         <i class="fa fa-font">
           <span class="sr-only">Text</span>
-        </i>
-      </button>
-      <button type="button" class="btn btn-default" title="Connect concepts">
-        <i class="fa fa-sitemap">
-          <span class="sr-only">Connect concepts</span>
         </i>
       </button>
       <button type="button" class="btn btn-default" title="Erase" data-ng-click="setMode('erase')"  data-ng-class="{'active': mode === 'erase'}">
@@ -64,7 +59,7 @@
       </button>
     </div>
     <div class="btn-group" role="group">
-      <button type="button" class="btn btn-default" title="Add asset" data-ng-click="setMode('asset')" data-ng-class="{'active': mode === 'asset'}" popover-template="'addAssetPopoverTemplate'" popover-append-to-body="true">
+      <button type="button" class="btn btn-default" title="Add asset" data-ng-click="setMode('asset')" data-ng-class="{'active': mode === 'asset'}" data-title="" data-content-template="addAssetPopoverTemplate" data-placement="top" data-auto-close="1" bs-popover>
         <i class="fa fa-plus-circle"></i>
         <span>Asset</span>
       </button>
@@ -79,25 +74,27 @@
 
   <!-- DRAW POPOVER -->
   <script type="text/ng-template" id="drawPopoverTemplate">
-    <form>
-      <label class="col-sm-6">Size</label>
-      <div class="col-sm-6">
-        <select>
-          <option value="1">1px</option>
-          <option value="5">5px</option>
-          <option value="10">10px</option>
-        </select>
+    <form class="whiteboards-popover-toolbar">
+      <div class="row">
+        <label class="col-sm-4">Size</label>
+        <div class="col-sm-8">
+          <select data-ng-model="$parent.selected.size">
+            <option value="1">1px</option>
+            <option value="5">5px</option>
+            <option value="10">10px</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="form-group whiteboards-color-picker">
-      <label class="col-sm-6">Color</label>
-      <div class="col-sm-6">
-        <div class="whiteboards-color-container" data-ng-repeat="color in colors">
-          <label data-ng-style="{'background-color': color.color}">
-            <input type="radio" name="whiteboards-draw-color" data-ng-value="color" data-ng-model="$parent.selectedColor">
-            <i class="fa fa-check" data-ng-if="$parent.selectedColor === color"></i>
-            <span class="sr-only" data-ng-bind="color.name"></span>
-          </label>
+      <div class="row whiteboards-color-picker">
+        <label class="col-sm-4">Color</label>
+        <div class="col-sm-8">
+          <div class="whiteboards-color-container" data-ng-repeat="color in colors">
+            <label data-ng-style="{'background-color': color.color}">
+              <input type="radio" name="whiteboards-draw-color" data-ng-value="color" data-ng-model="$parent.selected.color">
+              <i class="fa fa-check" data-ng-if="$parent.selected.color === color"></i>
+              <span class="sr-only" data-ng-bind="color.name"></span>
+            </label>
+          </div>
         </div>
       </div>
     </form>

@@ -29,9 +29,9 @@
     'common.fabric.constants',
     'infinite-scroll',
     'luegg.directives',
+    'mgcrea.ngStrap',
     'monospaced.elastic',
     'oi.multiselect',
-    'ui.bootstrap',
     'ui.utils'
   ]);
 

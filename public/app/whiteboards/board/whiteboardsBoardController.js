@@ -38,7 +38,7 @@
       'query': 'api_domain=' + launchParams.apiDomain + '&course_id=' + launchParams.courseId + '&whiteboard_id=' + whiteboardId
     });
 
-    // TODO
+    // Variable that will keep track of the available colors in the color picker
     $scope.colors = [
       {
         'name': 'Black',
@@ -73,18 +73,6 @@
         'color': 'rgb(189, 129, 0)'
       },
     ];
-
-    // TODO
-    $scope.selectedColor = null;
-
-    setInterval(function() {
-      console.log('$scope.selectedColor is now ' + $scope.selectedColor);
-    }, 500);
-
-    // TODO
-    $scope.$watch('selectedColor', function() {
-      alert('$scope.selectedColor is now ' + $scope.selectedColor);
-    });
 
     /* WHITEBOARD */
 
@@ -146,6 +134,8 @@
       fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
       // Initialize the whiteboard Fabric.js instance
       canvas = new fabric.Canvas('whiteboards-board-board');
+      // Set the pencil brush as the drawing brush
+      canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       // Set the width and height of the canvas
       setCanvasDimensions();
       // Load the whiteboard information, including the whiteboard's content
@@ -162,7 +152,8 @@
       canvas.setWidth(viewport.clientWidth);
     };
 
-    // TODO: Resize viewport when canvas is resized
+    // Resize the viewport when the window is resized
+    window.addEventListener('resize', setCanvasDimensions);
 
     /**
      * Get the current center point of the whiteboard canvas. This will
@@ -540,17 +531,17 @@
      * Close all popovers
      * @see https://angular-ui.github.io/bootstrap/
      */
-    var closePopovers = function() {
+    // /var closePopovers = function() {
       // Get all popovers
-      var popups = document.querySelectorAll('.popover');
-      for (var i = 0; i < popups.length; i++) {
-        // Close each popover
-        var popup = angular.element(popups[i]);
-        var popupScope = popup.scope().$parent;
-        popupScope.isOpen = false;
-        popup.remove();
-      }
-    };
+    //  var popups = document.querySelectorAll('.popover');
+    //  for (var i = 0; i < popups.length; i++) {
+    //    // Close each popover
+    //    var popup = angular.element(popups[i]);
+    //    var popupScope = popup.scope().$parent;
+    //    popupScope.isOpen = false;
+    //    popup.remove();
+    //  }
+    //};
 
     /* UNDO/REDO */
 
@@ -662,8 +653,11 @@
 
     /* DRAWING */
 
-    // Variable that will keep track of the selected line width
-    $scope.lineWidth = 1;
+    // Variable that will keep track of the selected line width and selected draw color
+    $scope.draw = {
+      'lineWidth': 1,
+      'color': $scope.colors[0]
+    };
 
     /**
      * Enable or disable drawing mode for the whiteboard canvas
@@ -673,6 +667,20 @@
     var setDrawMode = $scope.setDrawMode = function(drawMode) {
       canvas.isDrawingMode = drawMode;
     };
+
+    /**
+     * Change the drawing color when a new color has been selected in the color picker
+     */
+    $scope.$watch('selected.color', function() {
+      canvas.freeDrawingBrush.color = $scope.selected.color.color;
+    }, true);
+
+    /**
+     * Change the drawing line width when a new line width has been selected in the width picker
+     */
+    $scope.$watch('selected.size', function() {
+      canvas.freeDrawingBrush.width = parseInt($scope.selected.lineWidth, 10);
+    }, true);
 
     /* SHAPE */
 
