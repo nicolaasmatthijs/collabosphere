@@ -30,6 +30,7 @@ module.exports = {
   "db": {
     "database": "collabospheretravis",
     "username": "postgres",
+    "version": "9.4.1",
     "password": "",
     "dropOnStartup": true
   },

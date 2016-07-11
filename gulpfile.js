@@ -215,7 +215,7 @@ gulp.task('jscs', function() {
  */
 gulp.task('csslint', function() {
   return gulp
-    .src(['public/**/*.css', '!public/lib/**/*.css'])
+    .src(['public/**/*.css', '!public/lib/**/*.css', '!public/viewer/**/*.css'])
     .pipe(csslint({
       'adjoining-classes': false,
       'box-model': false,
