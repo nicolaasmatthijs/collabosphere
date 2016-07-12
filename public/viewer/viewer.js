@@ -8352,7 +8352,7 @@ var PDFViewerApplication = {
 };
 
 var HOSTED_VIEWER_ORIGINS = ['null',
-  'http://mozilla.github.io', 'https://mozilla.github.io', 'http://collabosphere.berkeley'];
+  'http://mozilla.github.io', 'https://mozilla.github.io'];
 function validateFileURL(file) {
   try {
     var viewerOrigin = new URL(window.location.href).origin || 'null';
@@ -8402,7 +8402,7 @@ function webViewerInitialized() {
   var queryString = document.location.search.substring(1);
   var params = parseQueryString(queryString);
   var file = 'file' in params ? params.file : DEFAULT_URL;
-  validateFileURL(file);
+  //validateFileURL(file);
 
   var waitForBeforeOpening = [];
   var appConfig = PDFViewerApplication.appConfig;
