@@ -70,7 +70,7 @@
         // Build the asset comment tree
         buildCommentTree(asset);
 
-        // Add in necessary data that the view can use to show the correct preview layer
+        // Augment the asset object with data that the view can use to show the correct preview layer
         if (asset.preview_status === 'done') {
           if (asset.type === 'file') {
             if (asset.pdf_url) {
